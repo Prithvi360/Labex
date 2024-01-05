@@ -1,0 +1,223 @@
+#index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Task Manager</h1>
+
+<button id="addTaskButton">Add Task</button>
+
+<section id="taskFormSection" style="display: none;">
+    <h2>Add Task</h2>
+    <form id="taskForm">
+        <label for="description">Task Description:</label>
+        <input type="text" id="description" required>
+
+        <label for="time">Task Time:</label>
+        <input type="text" id="time" required>
+
+        <label for="details">Task Details:</label>
+        <textarea id="details" required></textarea>
+
+        <button type="submit">Add Task</button>
+    </form>
+</section>
+
+<h2>Task List:</h2>
+<ul id="taskList"></ul>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
+
+
+
+--------------------------------------------------------------------------------------------
+
+
+
+#styles.css
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#taskFormSection {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+}
+
+form {
+    display: grid;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+textarea {
+    height: 100px;
+}
+
+#taskList {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+#Task.js
+class Task {
+    constructor(id, description, time, details) {
+        this.id = id;
+        this.description = description;
+        this.time = time;
+        this.details = details;
+    }
+}
+
+export default Task;
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+#TaskManager.js
+
+
+import Task from './Task.js';
+
+class TaskManager {
+    constructor() {
+        this.tasks = [];
+        this.currentId = 1;
+    }
+
+    addTask(description, time, details) {
+        const task = new Task(this.currentId++, description, time, details);
+        this.tasks.push(task);
+        this.saveTasks();
+    }
+
+    getTasks() {
+        return this.tasks;
+    }
+
+    saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    }
+
+    loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        this.tasks = tasks;
+        this.currentId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+    }
+}
+
+export default TaskManager;
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+#app.js
+
+import TaskManager from './TaskManager.js';
+
+const taskManager = new TaskManager();
+taskManager.loadTasks();
+
+function displayTasks() {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+
+    taskManager.getTasks().forEach(task => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <strong>${task.description}</strong>
+            <p>Time: ${task.time}</p>
+            <p>Details: ${task.details}</p>
+        `;
+        taskList.appendChild(listItem);
+    });
+}
+
+document.getElementById('addTaskButton').addEventListener('click', function () {
+    const taskFormSection = document.getElementById('taskFormSection');
+    taskFormSection.style.display = 'block';
+});
+
+document.getElementById('taskForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const descriptionInput = document.getElementById('description');
+    const timeInput = document.getElementById('time');
+    const detailsInput = document.getElementById('details');
+
+    const description = descriptionInput.value.trim();
+    const time = timeInput.value.trim();
+    const details = detailsInput.value.trim();
+
+    if (description !== '' && time !== '' && details !== '') {
+        taskManager.addTask(description, time, details);
+        displayTasks();
+        descriptionInput.value = '';
+        timeInput.value = '';
+        detailsInput.value = '';
+        document.getElementById('taskFormSection').style.display = 'none';
+    }
+});
+
+displayTasks();
