@@ -1,0 +1,157 @@
+--index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Event Registration App</title>
+</head>
+<body>
+
+<div class="tabs">
+    <button class="tablinks" onclick="openTab(event, 'registrationTab')">Registration</button>
+    <button class="tablinks" onclick="openTab(event, 'recordsTab')">Registered Records</button>
+</div>
+
+<div id="registrationTab" class="tabcontent">
+    <h2>Event Registration Form</h2>
+    <form id="registrationForm" onsubmit="registerEvent(event)">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" pattern="\d*" title="Please enter only numbers" required>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<div id="recordsTab" class="tabcontent">
+    <h2>Registered Records</h2>
+    <ul id="registeredRecords"></ul>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+
+
+--Styles.css
+body {
+    font-family: Arial, sans-serif;
+}
+
+.tabs {
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.tablinks {
+    background-color: #ddd;
+    float: left;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 10px;
+    width: 50%;
+}
+
+.tablinks:hover {
+    background-color: #ddd;
+}
+
+.tabcontent {
+    display: none;
+}
+
+#registrationTab {
+    display: block;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+
+app.js
+// Function to switch between tabs
+function openTab(event, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabName).style.display = "block";
+    event.currentTarget.classList.add("active");
+}
+
+// Function to handle form submission and register event
+function registerEvent(event) {
+    event.preventDefault();
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var phone = document.getElementById("phone").value;
+
+    // Simple form validation
+    if (!name || !email || !phone) {
+        alert("Please fill out all fields in the registration form.");
+        return;
+    }
+
+    // Validate phone number using a regular expression
+    var phonePattern = /^\d*$/;
+    if (!phonePattern.test(phone)) {
+        alert("Please enter a valid phone number (only numbers allowed).");
+        return;
+    }
+
+    // Display the registered record
+    var registeredRecords = document.getElementById("registeredRecords");
+    var listItem = document.createElement("li");
+    listItem.textContent = `Name: ${name}, Email: ${email}, Phone: ${phone}`;
+    registeredRecords.appendChild(listItem);
+
+    // Clear the form
+    document.getElementById("registrationForm").reset();
+}
+
+// Set the default tab to the registration tab
+document.querySelector('.tablinks').click();
