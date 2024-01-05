@@ -1,0 +1,141 @@
+// src/App.js
+import React, { useState } from 'react';
+import UserList from './UserList';
+import ExerciseList from './ExerciseList';
+import AddExercise from './AddExercise';
+
+const App = () => {
+  const [users] = useState([
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Doe' },
+    { id: 3, name: 'Bob Smith' },
+  ]);
+
+  const [exercises, setExercises] = useState([]);
+
+  const handleAddExercise = (exercise) => {
+    setExercises([...exercises, { ...exercise, id: exercises.length + 1 }]);
+  };
+ 
+
+  return (
+    <div>
+      <h1>Exercise Tracker</h1>
+      <UserList users={users} />
+      <ExerciseList exercises={exercises} />
+      <AddExercise onAddExercise={handleAddExercise} />
+    </div>
+  );
+};
+
+export default App;
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+// src/ExerciseList.js
+import React from 'react';
+
+const ExerciseList = ({ exercises }) => {
+  return (
+    <div>
+      <h2>Exercise List</h2>
+      <ul>
+        {exercises.map((exercise) => (
+          <li key={exercise.id}>
+            {exercise.user} - {exercise.activity} ({exercise.duration} minutes)
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ExerciseList;
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+// src/AddExercise.js
+import React, { useState } from 'react';
+
+const AddExercise = ({ onAddExercise }) => {
+  const [user, setUser] = useState('');
+  const [activity, setActivity] = useState('');
+  const [duration, setDuration] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAddExercise({ user, activity, duration });
+    setUser('');
+    setActivity('');
+    setDuration('');
+  };
+
+  return (
+    <div>
+      <h2>Add Exercise</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          User:
+          <input type="text" value={user} onChange={(e) => setUser(e.target.value)} required />
+        </label>
+        <br />
+        <label>
+          Activity:
+          <input
+            type="text"
+            value={activity}
+            onChange={(e) => setActivity(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Duration (minutes):
+          <input
+            type="number"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <button type="submit">Add Exercise</button>
+      </form>
+    </div>
+  );
+};
+
+export default AddExercise;
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+// src/UserList.js
+import React from 'react';
+
+const UserList = ({ users }) => {
+  return (
+    <div>
+      <h2>User List</h2>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default UserList;
+
+
+
