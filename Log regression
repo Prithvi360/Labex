@@ -1,0 +1,83 @@
+#text
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data=pd.read_csv("diabetes.csv)
+data.shape
+X=data.drop(['SkinThickness','Outcome'],axis=1)
+y=data['Outcome']
+from sklearn.model_selection import train_test_split
+x_train,xtest,y_train,y_test=train_test_split(X,y,test_size=0.20)
+from sklearn.linear_model import LogisticRegression
+clf=LogisticRegression()
+clf.fit(X_train,Y_train)
+from sklean.metrics import accuracy_score
+print("Accuracy:",accuracy_score(y_test,y_pred))
+
+
+1 Spam detection
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load the spam dataset (replace 'spam_dataset.csv' with the actual path)
+spam_data = pd.read_csv('spam_dataset.csv')
+
+# Assuming the dataset contains features and a target variable 'label'
+X_spam = spam_data.drop('label', axis=1)
+y_spam = spam_data['label']
+
+# Split the dataset into training and testing sets
+X_spam_train, X_spam_test, y_spam_train, y_spam_test = train_test_split(X_spam, y_spam, test_size=0.2, random_state=42)
+
+# Create and train the Logistic Regression model
+logistic_regression_spam = LogisticRegression()
+logistic_regression_spam.fit(X_spam_train, y_spam_train)
+
+# Make predictions on the test set
+y_spam_pred = logistic_regression_spam.predict(X_spam_test)
+
+# Evaluate the model
+accuracy_spam = accuracy_score(y_spam_test, y_spam_pred)
+print(f"Accuracy (Spam Detection): {accuracy_spam}")
+print("Classification Report:")
+print(classification_report(y_spam_test, y_spam_pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_spam_test, y_spam_pred))
+
+
+
+
+2 Diabetes
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load the diabetes dataset (replace 'diabetes_dataset.csv' with the actual path)
+diabetes_data = pd.read_csv('diabetes_dataset.csv')
+
+# Assuming the dataset contains features and a target variable 'Outcome'
+X_diabetes = diabetes_data.drop('Outcome', axis=1)
+y_diabetes = diabetes_data['Outcome']
+
+# Split the dataset into training and testing sets
+X_diabetes_train, X_diabetes_test, y_diabetes_train, y_diabetes_test = train_test_split(X_diabetes, y_diabetes, test_size=0.2, random_state=42)
+
+# Create and train the Logistic Regression model
+logistic_regression_diabetes = LogisticRegression()
+logistic_regression_diabetes.fit(X_diabetes_train, y_diabetes_train)
+
+# Make predictions on the test set
+y_diabetes_pred = logistic_regression_diabetes.predict(X_diabetes_test)
+
+# Evaluate the model
+accuracy_diabetes = accuracy_score(y_diabetes_test, y_diabetes_pred)
+print(f"Accuracy (Diabetes Prediction): {accuracy_diabetes}")
+print("Classification Report:")
+print(classification_report(y_diabetes_test, y_diabetes_pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_diabetes_test, y_diabetes_pred))
+
+
