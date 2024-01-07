@@ -1,0 +1,71 @@
+import csv
+from collections import Counter
+import matplotlib.pyplot as plt
+import numpy as np
+import sklearn.metrics as sm
+from sklearn.mixture import GaussianMixture
+from sklearn.cluster import KMeans
+
+class_dict = {'setosa': 0, 'versicolor': 1, 'virginica': 2}
+
+with open('ds5.csv') as csvFile:
+    dataset = [line for line in csv.reader(csvFile)]
+    dataset = dataset[1:]
+    X = []
+    y = []
+    for line in dataset:
+        X.append(line[:-1])
+        y.append(class_dict[line[-1]])
+
+    X = np.array(X).astype(float)
+    y = np.array(y).astype(int)
+
+
+def rename_clusters(s):
+    cnt = Counter((c1, c2) for c1, c2 in zip(s, y))
+    most_common = cnt.most_common()
+    map_dict = {}
+    for tup in most_common:
+        if not tup[0][0] in map_dict:
+            map_dict[tup[0][0]] = tup[0][1]
+
+    for i in range(len(s)):
+        s[i] = map_dict[s[i]]
+    return s
+
+
+# EM part
+gmm = GaussianMixture(n_components=3)
+gmm.fit(X)
+y_kmeans = gmm.predict(X)
+em = rename_clusters(y_kmeans)
+plt.scatter(X[:, 0], X[:, 1], c=em, s=40, cmap='viridis')
+print("Accuracy EM : ", sm.accuracy_score(y, em))
+plt.show()
+
+--------------------------
+
+
+import numpy as np import pandas as pd
+import matplotlib.pyplot as plt from pandas
+import DataFrame
+from sklearn import datasets
+from sklearn,mixture import GaussianMixture
+
+iris=datasets.load_iris()
+x=iris.data[:,:2]
+d=pd.DataFrame(X)
+plt.scatter(d[0],d[1])
+gmm=GaussianMixture(n_components=3)
+labels=gmm.predict(d)
+d['labels']=labels
+d0=d[d['labels']==0]
+d1=d[d['labels']==1]
+d2=d[d['labels']==2]
+
+plt.scatter(d0[0],d0[1],c='r')
+plt.scatter(d1[0],d1[1],c='yellow')
+
+print(gmm.lowe_bound_)
+print(gmm.n_iter_)
+plt.scatter(d2[0],d2[1],c='g')
