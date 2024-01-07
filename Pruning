@@ -1,0 +1,45 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score
+
+# Load the Monk2 dataset (replace 'monk2.csv' with the actual path)
+dataset_path = 'monk2.csv'
+data = pd.read_csv(dataset_path)
+
+# Assuming the dataset contains a target column named 'class'
+X = data.drop('class', axis=1)
+y = data['class']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build an unpruned decision tree
+unpruned_tree = DecisionTreeClassifier(random_state=42)
+unpruned_tree.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred_unpruned = unpruned_tree.predict(X_test)
+
+# Evaluate the unpruned tree
+accuracy_unpruned = accuracy_score(y_test, y_pred_unpruned)
+print(f"Accuracy of Unpruned Tree: {accuracy_unpruned}")
+
+# Plot the unpruned tree
+plot_tree(unpruned_tree, feature_names=X.columns, class_names=data['class'].unique(), filled=True, rounded=True)
+
+
+
+# Apply pruning by setting ccp_alpha
+pruned_tree = DecisionTreeClassifier(ccp_alpha=0.01, random_state=42)
+pruned_tree.fit(X_train, y_train)
+
+# Make predictions on the test set using the pruned tree
+y_pred_pruned = pruned_tree.predict(X_test)
+
+# Evaluate the pruned tree
+accuracy_pruned = accuracy_score(y_test, y_pred_pruned)
+print(f"Accuracy of Pruned Tree: {accuracy_pruned}")
+
+# Plot the pruned tree
+plot_tree(pruned_tree, feature_names=X.columns, class_names=data['class'].unique(), filled=True, rounded=True)
